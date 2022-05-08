@@ -6,7 +6,8 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 
 // 리포지토리는 엔티티를 찾아주는 것 DAO랑 유사하다.
-@Repository // 컴포넌트 스캔의 대상이 된다.
+// 컴포넌트 스캔의 대상이 된다.
+@Repository
 public class MemberRepository {
 
     // JPA를 사용하기 때문에, 엔티티 매니저가 있어야 한다.
