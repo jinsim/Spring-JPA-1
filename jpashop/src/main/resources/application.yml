@@ -1,7 +1,8 @@
 spring:
   datasource:
     # DB 접근. MVCC 옵션은 삭제되었다.
-    url: jdbc:h2:tcp://localhost/~/jpashop
+    # db 파일이 있는 위치로 설정해주어야 하고, h2 콘솔의 url도 같아야 한다. 필자는 h2폴더 안에 넣었음.
+    url: jdbc:h2:tcp://localhost/~/h2/jpashop
     username: sa
     password:
     # DB 커넥션과 관련된 데이터 소스 설정이 완료됨.
