@@ -17,14 +17,25 @@ public class Order {
     @Column(name = "order_id") // 테이블명 + _id
     private Long id;
 
-    @ManyToOne // 다대일 관계
+    @ManyToOne(fetch = FetchType.LAZY) // 다대일 관계
     @JoinColumn(name = "member_id") // 매핑을 뭐로 할거냐. foreign key의 이름이 member_id가 된다.
     private Member member;
 
-    @OneToMany(mappedBy = "order")
+    @OneToMany(mappedBy = "order", cascade = CascadeType.ALL)
+    // orderItems에 데이터를 넣어두고 order를 저장하면, orderItems도 같이 저장된다.
+    // 원래는 JPA의 persist로 아이템들을 넣고, 그 다음 order에 persist를 해야 한다.
+    //  persist(orederItemA)
+    //  persist(orederItemB)
+    //  persist(orederItemC)
+    //  persist(order)
+    // cascade를 하면 order에만 persist를 해도 된다. cascade가 persist를 전파하기 때문
+    //  persist(order)
     private List<OrderItem> orderItems = new ArrayList<>();
 
-    @OneToOne
+    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    // order를 저장할 때, delivery 객체만 세팅해두면, delivery도 같이 persist 해준다.
+    // 원래는 delivery도 persist, order도 persist 각각 해줘야 한다.
+    // 모든 엔티티는 기본적으로 persist를 각각 해줘야 한다.
     @JoinColumn(name = "delivery_id")
     private Delivery delivery;
 
@@ -34,4 +45,24 @@ public class Order {
 
     @Enumerated(EnumType.STRING)
     private OrderStatus status; // 주문 상태 [ORDER, CANCEL]
+
+    //==연관관계 메서드==//
+
+    // setMember를 하면 양방향으로 각각 데이터를 넣어준다.
+    public void setMember(Member member) {
+        this.member = member;
+        member.getOrders().add(this);
+    }
+
+    public void addOrderItem(OrderItem orderItem) {
+        orderItems.add(orderItem);
+        orderItem.setOrder(this);
+    }
+
+    public void setDelivery(Delivery delivery) {
+        this.delivery = delivery;
+        delivery.setOrder(this);
+    }
+
+
 }
