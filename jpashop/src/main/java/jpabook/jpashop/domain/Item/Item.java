@@ -1,6 +1,7 @@
 package jpabook.jpashop.domain.Item;
 
 import jpabook.jpashop.domain.Category;
+import jpabook.jpashop.exception.NotEnoughStockException;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -25,4 +26,25 @@ public class Item {
 
     @ManyToMany(mappedBy = "items")
     private List<Category> categories = new ArrayList<>();
+
+    //== 상품 도메인 관련 비즈니스 로직==//
+
+    /**
+     * stockQuantity를 갖고 있는 곳에서 관련된 비즈니스 로직이 나가는 게 가장 응집도가 있을 것. (DDD, 객체지향)
+     * stock 증가
+     */
+    public void addStock(int quantity) {
+        this.stockQuantity += quantity;
+    }
+    /**
+     * stock 감소
+     */
+    public void removeStock(int quantity) {
+        int restStock = this.stockQuantity - quantity;
+        if (restStock < 0) {
+            throw new NotEnoughStockException("need more stock");
+        }
+        this.stockQuantity = restStock;
+    }   
+
 }
