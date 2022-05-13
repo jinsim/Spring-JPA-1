@@ -45,6 +45,6 @@ public class Item {
             throw new NotEnoughStockException("need more stock");
         }
         this.stockQuantity = restStock;
-    }   
+    }
 
 }
